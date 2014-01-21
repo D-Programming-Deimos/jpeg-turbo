@@ -1,0 +1,11 @@
+{
+	"name": "jpeg-turbo",
+	"description": "D bindings to libjpeg-turbo",
+	"homepage": "http://www.libjpeg-turbo.org",
+	"authors": [
+		"Lionello Lunesu"
+	],
+	"libs":["turbojpeg"],
+	"dependencies": {
+	}
+}
