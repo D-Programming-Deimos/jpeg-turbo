@@ -5,6 +5,7 @@
 	"authors": [
 		"Lionello Lunesu"
 	],
+	"targetType": "sourceLibrary",
 	"libs":["turbojpeg"],
 	"dependencies": {
 	}
