@@ -15,7 +15,7 @@ enum C_ARITH_CODING_SUPPORTED = 1;
 enum D_ARITH_CODING_SUPPORTED = 1;
 
 /* Support in-memory source/destination managers */
-/* #undef MEM_SRCDST_SUPPORTED */
+enum MEM_SRCDST_SUPPORTED = 0;
 
 /* Compiler supports function prototypes. */
 enum HAVE_PROTOTYPES = 1;
