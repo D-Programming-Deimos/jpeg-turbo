@@ -411,7 +411,7 @@ static if (JPEG_LIB_VERSION >= 70){
    * There are v_samp_factor * DCTSIZE sample rows of each component in an
    * "iMCU" (interleaved MCU) row.
    */
-  
+
   /*
    * These fields are valid during any one scan.
    * They describe the components and MCUs actually appearing in the scan.
@@ -895,7 +895,7 @@ alias jpeg_destroy_compress	jDestCompress;
 alias jpeg_destroy_decompress	jDestDecompress;
 alias jpeg_stdio_dest		jStdDest;
 alias jpeg_stdio_src		jStdSrc;
-static if (JPEG_LIB_VERSION >= 80 || defined(MEM_SRCDST_SUPPORTED)){
+static if (JPEG_LIB_VERSION >= 80 || MEM_SRCDST_SUPPORTED){
 alias jpeg_mem_dest		jMemDest;
 alias jpeg_mem_src		jMemSrc;
 }
