@@ -1,4 +1,4 @@
-gmodule libjpeg.jpeglib;
+module libjpeg.jpeglib;
 /*
  * jpeglib.h
  *
