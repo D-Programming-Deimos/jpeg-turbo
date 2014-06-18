@@ -201,7 +201,6 @@ struct jpeg_marker_struct {
 /* Known color spaces. */
 
 enum JCS_EXTENSIONS = 1;
-enum JCS_ALPHA_EXTENSIONS = 1;
 
 enum J_COLOR_SPACE{
 	JCS_UNKNOWN,		/* error/unspecified */
@@ -217,17 +216,6 @@ enum J_COLOR_SPACE{
 	JCS_EXT_BGRX,		/* blue/green/red/x */
 	JCS_EXT_XBGR,		/* x/blue/green/red */
 	JCS_EXT_XRGB,		/* x/red/green/blue */
-	/* When out_color_space it set to JCS_EXT_RGBX, JCS_EXT_BGRX,
-	   JCS_EXT_XBGR, or JCS_EXT_XRGB during decompression, the X byte is
-	   undefined, and in order to ensure the best performance,
-	   libjpeg-turbo can set that byte to whatever value it wishes.  Use
-	   the following colorspace constants to ensure that the X byte is set
-	   to 0xFF, so that it can be interpreted as an opaque alpha
-	   channel. */
-	JCS_EXT_RGBA,		/* red/green/blue/alpha */
-	JCS_EXT_BGRA,		/* blue/green/red/alpha */
-	JCS_EXT_ABGR,		/* alpha/blue/green/red */
-	JCS_EXT_ARGB		/* alpha/red/green/blue */
 }
 
 /* DCT/IDCT algorithm options. */
@@ -879,7 +867,6 @@ alias boolean function(j_decompress_ptr cinfo) jpeg_marker_parser_method;
  */
 
 
-
 /* Short forms of external names for systems with brain-damaged linkers.
  * We shorten external names to be unique in the first six letters, which
  * is good enough for all known systems.
@@ -985,7 +972,7 @@ import core.stdc.stdio : FILE;
 void jpeg_stdio_dest(j_compress_ptr cinfo, FILE * outfile);
 void jpeg_stdio_src(j_decompress_ptr cinfo, FILE * infile);
 
-static if (JPEG_LIB_VERSION >= 80 || MEM_SRCDST_SUPPORTED){
+static if (JPEG_LIB_VERSION >= 80){
 /* Data source and destination managers: memory buffers. */
 void jpeg_mem_dest(j_compress_ptr cinfo,
 			       ubyte ** outbuffer,

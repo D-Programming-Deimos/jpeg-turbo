@@ -7,7 +7,7 @@
 		"Lionello Lunesu"
 	],
 	"targetType": "sourceLibrary",
-	"libs":["turbojpeg"],
+	"libs":["jpeg"],
 	"dependencies": {
 	}
 }
