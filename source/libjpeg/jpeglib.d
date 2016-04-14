@@ -59,7 +59,7 @@ alias JSAMPLE     *JSAMPROW;	/* ptr to one image row of pixel samples. */
 alias JSAMPROW *JSAMPARRAY;	/* ptr to some rows (a 2-D sample array) */
 alias JSAMPARRAY *JSAMPIMAGE;	/* a 3-D sample array: top index is color */
 
-alias JCOEF JBLOCK[DCTSIZE2];	/* one block of coefficients */
+alias JCOEF[DCTSIZE2] JBLOCK;	/* one block of coefficients */
 alias JBLOCK     *JBLOCKROW;	/* pointer to one row of coefficient blocks */
 alias JBLOCKROW *JBLOCKARRAY;		/* a 2-D array of coefficient blocks */
 alias JBLOCKARRAY *JBLOCKIMAGE;	/* a 3-D array of coefficient blocks */
@@ -77,7 +77,7 @@ struct JQUANT_TBL{
    * (not the zigzag order in which they are stored in a JPEG DQT marker).
    * CAUTION: IJG versions prior to v6a kept this array in zigzag order.
    */
-  UINT16 quantval[DCTSIZE2];	/* quantization step for each coefficient */
+  UINT16[DCTSIZE2] quantval;	/* quantization step for each coefficient */
   /* This field is used only during compression.  It's initialized FALSE when
    * the table is created, and set TRUE when it's been output to the file.
    * You could suppress output of a table by setting this to TRUE.
@@ -91,9 +91,9 @@ struct JQUANT_TBL{
 
 struct JHUFF_TBL {
   /* These two fields directly represent the contents of a JPEG DHT marker */
-  UINT8 bits[17];		/* bits[k] = # of symbols with codes of */
+  UINT8[17] bits;		/* bits[k] = # of symbols with codes of */
 				/* length k bits; bits[0] is unused */
-  UINT8 huffval[256];		/* The symbols, in order of incr code length */
+  UINT8[256] huffval;		/* The symbols, in order of incr code length */
   /* This field is used only during compression.  It's initialized FALSE when
    * the table is created, and set TRUE when it's been output to the file.
    * You could suppress output of a table by setting this to TRUE.
@@ -180,7 +180,7 @@ static if (JPEG_LIB_VERSION >= 70){
 
 struct jpeg_scan_info{
   int comps_in_scan;		/* number of components encoded in this scan */
-  int component_index[MAX_COMPS_IN_SCAN]; /* their SOF/comp_info[] indexes */
+  int[MAX_COMPS_IN_SCAN] component_index; /* their SOF/comp_info[] indexes */
   int Ss, Se;			/* progressive JPEG spectral selection parms */
   int Ah, Al;			/* progressive JPEG successive approx. parms */
 }
@@ -327,21 +327,21 @@ static if (JPEG_LIB_VERSION >= 70){
   jpeg_component_info * comp_info;
   /* comp_info[i] describes component that appears i'th in SOF */
 
-  JQUANT_TBL * quant_tbl_ptrs[NUM_QUANT_TBLS];
+  JQUANT_TBL*[NUM_QUANT_TBLS] quant_tbl_ptrs;
 static if (JPEG_LIB_VERSION >= 70){
-  int q_scale_factor[NUM_QUANT_TBLS];
+  int[NUM_QUANT_TBLS] q_scale_factor;
 }
   /* ptrs to coefficient quantization tables, or NULL if not defined,
    * and corresponding scale factors (percentage, initialized 100).
    */
 
-  JHUFF_TBL * dc_huff_tbl_ptrs[NUM_HUFF_TBLS];
-  JHUFF_TBL * ac_huff_tbl_ptrs[NUM_HUFF_TBLS];
+  JHUFF_TBL*[NUM_HUFF_TBLS] dc_huff_tbl_ptrs;
+  JHUFF_TBL*[NUM_HUFF_TBLS] ac_huff_tbl_ptrs;
   /* ptrs to Huffman coding tables, or NULL if not defined */
 
-  UINT8 arith_dc_L[NUM_ARITH_TBLS]; /* L values for DC arith-coding tables */
-  UINT8 arith_dc_U[NUM_ARITH_TBLS]; /* U values for DC arith-coding tables */
-  UINT8 arith_ac_K[NUM_ARITH_TBLS]; /* Kx values for AC arith-coding tables */
+  UINT8[NUM_ARITH_TBLS] arith_dc_L; /* L values for DC arith-coding tables */
+  UINT8[NUM_ARITH_TBLS] arith_dc_U; /* U values for DC arith-coding tables */
+  UINT8[NUM_ARITH_TBLS] arith_ac_K; /* Kx values for AC arith-coding tables */
 
   int num_scans;		/* # of entries in scan_info array */
   const(jpeg_scan_info) * scan_info; /* script for multi-scan file, or NULL */
@@ -417,14 +417,14 @@ static if (JPEG_LIB_VERSION >= 70){
    * They describe the components and MCUs actually appearing in the scan.
    */
   int comps_in_scan;		/* # of JPEG components in this scan */
-  jpeg_component_info * cur_comp_info[MAX_COMPS_IN_SCAN];
+  jpeg_component_info*[MAX_COMPS_IN_SCAN] cur_comp_info;
   /* *cur_comp_info[i] describes component that appears i'th in SOS */
   
   JDIMENSION MCUs_per_row;	/* # of MCUs across the image */
   JDIMENSION MCU_rows_in_scan;	/* # of MCU rows in the image */
   
   int blocks_in_MCU;		/* # of DCT blocks per MCU */
-  int MCU_membership[C_MAX_BLOCKS_IN_MCU];
+  int[C_MAX_BLOCKS_IN_MCU] MCU_membership;
   /* MCU_membership[i] is index in cur_comp_info of component owning */
   /* i'th block in an MCU */
 
@@ -566,11 +566,11 @@ struct jpeg_decompress_struct {
    * datastreams when processing abbreviated JPEG datastreams.
    */
 
-  JQUANT_TBL * quant_tbl_ptrs[NUM_QUANT_TBLS];
+  JQUANT_TBL *[NUM_QUANT_TBLS] quant_tbl_ptrs;
   /* ptrs to coefficient quantization tables, or NULL if not defined */
 
-  JHUFF_TBL * dc_huff_tbl_ptrs[NUM_HUFF_TBLS];
-  JHUFF_TBL * ac_huff_tbl_ptrs[NUM_HUFF_TBLS];
+  JHUFF_TBL *[NUM_HUFF_TBLS] dc_huff_tbl_ptrs;
+  JHUFF_TBL *[NUM_HUFF_TBLS] ac_huff_tbl_ptrs;
   /* ptrs to Huffman coding tables, or NULL if not defined */
 
   /* These parameters are never carried across datastreams, since they
@@ -588,9 +588,9 @@ static if (JPEG_LIB_VERSION >= 80){
   boolean progressive_mode;	/* TRUE if SOFn specifies progressive mode */
   boolean arith_code;		/* TRUE=arithmetic coding, FALSE=Huffman */
 
-  UINT8 arith_dc_L[NUM_ARITH_TBLS]; /* L values for DC arith-coding tables */
-  UINT8 arith_dc_U[NUM_ARITH_TBLS]; /* U values for DC arith-coding tables */
-  UINT8 arith_ac_K[NUM_ARITH_TBLS]; /* Kx values for AC arith-coding tables */
+  UINT8[NUM_ARITH_TBLS] arith_dc_L; /* L values for DC arith-coding tables */
+  UINT8[NUM_ARITH_TBLS] arith_dc_U; /* U values for DC arith-coding tables */
+  UINT8[NUM_ARITH_TBLS] arith_ac_K; /* Kx values for AC arith-coding tables */
 
   uint restart_interval; /* MCUs per restart interval, or 0 for no restart */
 
@@ -649,14 +649,14 @@ static if (JPEG_LIB_VERSION >= 70){
    * Note that the decompressor output side must not use these fields.
    */
   int comps_in_scan;		/* # of JPEG components in this scan */
-  jpeg_component_info * cur_comp_info[MAX_COMPS_IN_SCAN];
+  jpeg_component_info*[MAX_COMPS_IN_SCAN] cur_comp_info;
   /* *cur_comp_info[i] describes component that appears i'th in SOS */
 
   JDIMENSION MCUs_per_row;	/* # of MCUs across the image */
   JDIMENSION MCU_rows_in_scan;	/* # of MCU rows in the image */
 
   int blocks_in_MCU;		/* # of DCT blocks per MCU */
-  int MCU_membership[D_MAX_BLOCKS_IN_MCU];
+  int[D_MAX_BLOCKS_IN_MCU] MCU_membership;
   /* MCU_membership[i] is index in cur_comp_info of component owning */
   /* i'th block in an MCU */
 
@@ -722,8 +722,8 @@ struct jpeg_error_mgr {
   int msg_code;
   enum JMSG_STR_PARM_MAX  = 80;
   union msg_parm_t{
-    int i[8];
-    char s[JMSG_STR_PARM_MAX];
+    int[8] i;
+    char[JMSG_STR_PARM_MAX] s;
   }
   msg_parm_t msg_parm;
   
